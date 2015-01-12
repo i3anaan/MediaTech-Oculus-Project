@@ -5,8 +5,10 @@ public class MagicStick : MonoBehaviour
 {
 
     public enum WandStates { Fired, Charging, Moving, Aiming };
+    public enum BulletTypes {Water, Fire};
 
-    public FireBall fireBallPrefab;
+    public ExpiringBullet fireBallPrefab;
+    public ExpiringBullet waterBallPrefab;
     public bool forceSpawnFireBall;
     public WandStates wandState = WandStates.Fired;
     public int stabilizationDuration = 5;
@@ -19,6 +21,7 @@ public class MagicStick : MonoBehaviour
 
     private int tickCounter;
     private int charge;
+    private BulletTypes bulletType;
     
     private Vector3[] prevAngles;
 
@@ -39,6 +42,13 @@ public class MagicStick : MonoBehaviour
             {
                 wandState = WandStates.Charging;
                 charge = Mathf.Max(charge,0);
+                bulletType = BulletTypes.Fire;
+            }
+            if (this.transform.up.y < -upness)
+            {
+                wandState = WandStates.Charging;
+                charge = Mathf.Max(charge, 0);
+                bulletType = BulletTypes.Water;
             }
         }
         if (wandState == WandStates.Charging)
@@ -67,8 +77,14 @@ public class MagicStick : MonoBehaviour
             {
                 wandState = WandStates.Fired;
                 float speed = (((float)charge) / ((float)maxCharge)) * (maxFireBallSpeed - minFireBallSpeed) + minFireBallSpeed;
-                //Debug.Log("Launching fireball with speed: "+speed);
-                spawnFireBall(speed);
+                if (bulletType == BulletTypes.Fire)
+                {
+                    spawnExpiringBulet(fireBallPrefab,speed);
+                }
+                else if (bulletType == BulletTypes.Water)
+                {
+                    spawnExpiringBulet(waterBallPrefab, speed);
+                }
                 charge = 0;
             }
         }
@@ -77,7 +93,7 @@ public class MagicStick : MonoBehaviour
         if (forceSpawnFireBall)
         {
             Debug.Log("Force shoot fireball");
-            spawnFireBall(maxFireBallSpeed);
+            spawnExpiringBulet(fireBallPrefab,maxFireBallSpeed);
             forceSpawnFireBall = false;
         }
     }
@@ -95,12 +111,10 @@ public class MagicStick : MonoBehaviour
         return output;
     }
 
-    public void spawnFireBall(float velocity)
+    public void spawnExpiringBulet(ExpiringBullet bullet, float velocity)
     {
-        Debug.Log("Fireball Speed: " + velocity);
-        Debug.Log("Fireball shooting angle: "+vec3Average(prevAngles));
-        FireBall newFireBall = Instantiate(fireBallPrefab, this.transform.position, Quaternion.Euler(vec3Average(prevAngles))) as FireBall;
-        newFireBall.GetComponent<Rigidbody>().AddForce(this.transform.up * velocity);
+        ExpiringBullet newBullet = Instantiate(bullet, this.transform.position, Quaternion.Euler(vec3Average(prevAngles))) as ExpiringBullet;
+        newBullet.GetComponent<Rigidbody>().AddForce(this.transform.up * velocity);
     }
 
     public static Vector3 vec3Average(Vector3[] arr)
