@@ -12,7 +12,6 @@ public class Torch : MonoBehaviour, Lightable
 
     public virtual void Awake()
     {
-        Debug.Log("Torch awake!");
         activeParticleSystem = 0;
         particles = this.gameObject.GetComponentsInChildren<ParticleSystem>();
         turnOffAllBut(activeParticleSystem);
