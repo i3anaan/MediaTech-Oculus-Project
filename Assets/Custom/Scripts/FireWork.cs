@@ -67,6 +67,7 @@ public class FireWork : MonoBehaviour, Lightable  {
                 {
                     
                     child.transform.localPosition = new Vector3();
+                    child.rigidbody.velocity = new Vector3();
                     child.lightFuse();
                     Vector3 forceDir = Random.onUnitSphere;
                     forceDir.y = Mathf.Abs(forceDir.y);
