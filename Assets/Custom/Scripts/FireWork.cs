@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FireWork : MonoBehaviour {
+public class FireWork : MonoBehaviour, Lightable  {
     public float fuseTime;
     public bool fuseLighted;
     private int fuseLightedTicks;
@@ -85,5 +85,19 @@ public class FireWork : MonoBehaviour {
     {
         fuseLighted = true;
         particleSystem.Play(false);
+    }
+
+    public void turnOnActive()
+    {
+        lightFuse();
+    }
+
+    public void turnOffActive()
+    {
+    }
+
+    public bool toggleStatus()
+    {
+        return false;
     }
 }
