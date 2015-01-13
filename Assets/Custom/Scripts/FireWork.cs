@@ -2,26 +2,25 @@
 using System.Collections;
 
 public class FireWork : MonoBehaviour {
-
     public float fuseTime;
-    public Color color;
-
     public bool fuseLighted;
     private int fuseLightedTicks;
     public float explosionForce;
-    private ParticleSystem particleSystem;
-
     public bool lightFuseOnStart;
+    public float velocityDuringFuse;
+    public AudioClip explosionSound;
+    private ParticleSystem particleSystem;
+    private bool exploded = false;    
 
     void Awake()
     {
         particleSystem = GetComponent<ParticleSystem>();
-        particleSystem.startColor = color;
         particleSystem.Stop(true);
         if (lightFuseOnStart)
         {
             lightFuse();
         }
+        this.rigidbody.velocity = this.transform.up*velocityDuringFuse;
     }
 
     void FixedUpdate()
@@ -38,20 +37,28 @@ public class FireWork : MonoBehaviour {
 
     private void explode()
     {
-        FireWork[] children = GetComponentsInChildren<FireWork>();
-        foreach (FireWork child in children)
+        if (!exploded)
         {
-            //Debug.Log("Child: " + child + " parent:  " + child.transform.parent + " this: " + this.transform);
-            if (child != this && child.transform.parent == this.transform)
+            FireWork[] children = GetComponentsInChildren<FireWork>();
+            foreach (FireWork child in children)
             {
-				Debug.Log (this.transform + "Lighting fuse for: "+child);
-                child.transform.localPosition = new Vector3();
-                child.lightFuse();
-                child.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * explosionForce);
+                if (child != this && child.transform.parent == this.transform)
+                {
+                    
+                    child.transform.localPosition = new Vector3();
+                    child.lightFuse();
+                    Vector3 forceDir = Random.onUnitSphere;
+                    forceDir.y = Mathf.Abs(forceDir.y);
+
+                    Debug.Log(this.transform + "Lighting fuse for: " + child + " Dir: "+forceDir);
+                    child.GetComponent<Rigidbody>().AddForce(forceDir*explosionForce);
+                }
             }
+            particleSystem.Stop(false);
+            this.audio.PlayOneShot(explosionSound,1f);
         }
-		//Destroy (particleSystem);
-		Destroy (this);
+        exploded = true;
+		//Destroy (this);
     }
 
     public void lightFuse()
