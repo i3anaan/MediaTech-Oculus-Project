@@ -41,11 +41,11 @@ public class FireWork : MonoBehaviour {
         FireWork[] children = GetComponentsInChildren<FireWork>();
         foreach (FireWork child in children)
         {
-			Debug.Log ("Child transform: "+child.transform.parent);
-
-            if (child != this && child.transform.parent != this.transform)
+            //Debug.Log("Child: " + child + " parent:  " + child.transform.parent + " this: " + this.transform);
+            if (child != this && child.transform.parent == this.transform)
             {
-				Debug.Log ("Child: "+child);
+				Debug.Log (this.transform + "Lighting fuse for: "+child);
+                child.transform.localPosition = new Vector3();
                 child.lightFuse();
                 child.GetComponent<Rigidbody>().AddForce(Random.onUnitSphere * explosionForce);
             }
