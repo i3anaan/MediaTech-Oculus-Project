@@ -23,7 +23,6 @@ public class FireWork : MonoBehaviour, Lightable  {
         {
             lightFuse();
         }
-        this.rigidbody.velocity = this.transform.up*velocityDuringFuse;
     }
 
     void FixedUpdate()
@@ -85,6 +84,7 @@ public class FireWork : MonoBehaviour, Lightable  {
     {
         fuseLighted = true;
         particleSystem.Play(false);
+		this.rigidbody.velocity = this.transform.up*velocityDuringFuse;
     }
 
     public void turnOnActive()
