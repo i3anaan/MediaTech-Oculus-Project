@@ -75,7 +75,6 @@ public class FireWork : MonoBehaviour, Lightable  {
                     child.GetComponent<Rigidbody>().AddForce(forceDir * explosionForce);
                 }
             }
-            particleSystem.Stop(false);
             this.audio.PlayOneShot(explosionSound, 1f);
         }
         exploded = true;
