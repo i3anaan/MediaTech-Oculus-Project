@@ -10,7 +10,10 @@ public class FireWork : MonoBehaviour {
     public float velocityDuringFuse;
     public AudioClip explosionSound;
     private ParticleSystem particleSystem;
-    private bool exploded = false;    
+    private bool exploded = false;
+
+    public float particleEmitDuration;
+    public float particleEmitFadeStartPercentage;
 
     void Awake()
     {
@@ -32,7 +35,25 @@ public class FireWork : MonoBehaviour {
             {
                 explode();
             }
+
+
+            float percentage = (fuseLightedTicks * Time.fixedDeltaTime) / particleEmitDuration;
+            float adjustedPercentage = (percentage - particleEmitFadeStartPercentage) / (1 - particleEmitFadeStartPercentage);
+            //Debug.Log("Percentage: " + percentage + "  AdjustedPercentage: " + adjustedPercentage);
+            if (adjustedPercentage > 0)
+            {
+                Color color = particleSystem.startColor;
+                color.a = 1 - adjustedPercentage;
+                particleSystem.startColor = color;
+            }
+            if (percentage > 2 && exploded)
+            {
+                Destroy(particleSystem);
+                Destroy(this);
+            }
         }
+
+        
     }
 
     private void explode()
@@ -51,14 +72,13 @@ public class FireWork : MonoBehaviour {
                     forceDir.y = Mathf.Abs(forceDir.y);
 
                     Debug.Log(this.transform + "Lighting fuse for: " + child + " Dir: "+forceDir);
-                    child.GetComponent<Rigidbody>().AddForce(forceDir*explosionForce);
+                    child.GetComponent<Rigidbody>().AddForce(forceDir * explosionForce);
                 }
             }
             particleSystem.Stop(false);
-            this.audio.PlayOneShot(explosionSound,1f);
+            this.audio.PlayOneShot(explosionSound, 1f);
         }
         exploded = true;
-		//Destroy (this);
     }
 
     public void lightFuse()
