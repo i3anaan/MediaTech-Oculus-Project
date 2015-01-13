@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 interface Lightable
 {
-    void turnOn();
-    void turnOff();
+    void turnOnActive();
+    void turnOffActive();
     bool toggleStatus();
 }

@@ -8,7 +8,7 @@ public class Fireball : ExpiringBullet
         MonoBehaviour mb = collider.GetComponent<MonoBehaviour>();
         if (mb is Lightable)
         {
-            ((Lightable)mb).turnOn();
+            ((Lightable)mb).turnOnActive();
         }
     }
 }
