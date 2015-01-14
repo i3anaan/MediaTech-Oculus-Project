@@ -5,6 +5,7 @@ public class OVRCustomController : OptiTrackCorrector {
 
     public OVRCameraRig ovrCameraRigToCorrect;
     public bool oculusForceOverrideRotation;
+	public bool oculusForceSubdueRotation;
     public float oculusOverrideRotationDelay;
     private bool oculusOverrideRotationActive;
     private Quaternion previousRotation;
@@ -22,10 +23,14 @@ public class OVRCustomController : OptiTrackCorrector {
         {
             oculusOverrideRotationActive = true;
         }
-        if (oculusForceOverrideRotation)
+        if (oculusForceOverrideRotation || !oculusForceSubdueRotation)
         {
             oculusOverrideRotationActive = true;
         }
+		if (!oculusForceOverrideRotation || oculusForceSubdueRotation)
+		{
+			oculusOverrideRotationActive = false;
+		}
     }
 
 
@@ -42,6 +47,8 @@ public class OVRCustomController : OptiTrackCorrector {
         }
         else
         {
+			ovrCameraRigToCorrect.setRotation(Quaternion.identity, Quaternion.identity, Quaternion.identity);
+			OVRManager.display.RecenterPose();
             applyRotation();
         }
     }
