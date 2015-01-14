@@ -10,5 +10,13 @@ public class WaterBall : ExpiringBullet
         {
             ((Lightable)mb).turnOffActive();
         }
+        else
+        {
+            mb = collider.GetComponentInParent<MonoBehaviour>();
+            if (mb is Lightable)
+            {
+                ((Lightable)mb).turnOffActive();
+            }
+        }
     }
 }

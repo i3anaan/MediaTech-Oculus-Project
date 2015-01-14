@@ -38,7 +38,6 @@ public class FireWork : MonoBehaviour, Lightable  {
 
             float percentage = (fuseLightedTicks * Time.fixedDeltaTime) / particleEmitDuration;
             float adjustedPercentage = (percentage - particleEmitFadeStartPercentage) / (1 - particleEmitFadeStartPercentage);
-            //Debug.Log("Percentage: " + percentage + "  AdjustedPercentage: " + adjustedPercentage);
             if (adjustedPercentage > 0)
             {
                 Color color = particleSystem.startColor;
@@ -70,12 +69,11 @@ public class FireWork : MonoBehaviour, Lightable  {
                     child.lightFuse();
                     Vector3 forceDir = Random.onUnitSphere;
                     forceDir.y = Mathf.Abs(forceDir.y);
-
-                    Debug.Log(this.transform + "Lighting fuse for: " + child + " Dir: "+forceDir);
                     child.GetComponent<Rigidbody>().AddForce(forceDir * explosionForce);
                 }
             }
             this.audio.PlayOneShot(explosionSound, 1f);
+            this.rigidbody.velocity = new Vector3();
         }
         exploded = true;
     }
