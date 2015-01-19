@@ -11,10 +11,24 @@ public class OVRCustomController : OptiTrackCorrector {
     private Quaternion previousRotation;
     private float lastOptiTrackUpdate;
 
+    /**
+     * Oculus correct roteren bij setup van optitrack, dan altijd oculus rotatie gebruiken.
+     *      Waarschijnlijk door recenterPose() on load uit te vinken.
+     * 
+     * RecenterPose() wanneer van override naar subdue
+     * 
+     */
+
     void Update()
     {
         if (!previousRotation.Equals(this.transform.rotation))
         {
+            if (oculusOverrideRotationActive)
+            {
+                //From Override to subdue
+                //OVRManager.display.RecenterPose();
+                //TODO: try this
+            }
             lastOptiTrackUpdate = Time.time;
             oculusOverrideRotationActive = false;
         }
@@ -47,8 +61,6 @@ public class OVRCustomController : OptiTrackCorrector {
         }
         else
         {
-			ovrCameraRigToCorrect.setRotation(Quaternion.identity, Quaternion.identity, Quaternion.identity);
-			OVRManager.display.RecenterPose();
             applyRotation();
         }
     }
