@@ -9,6 +9,8 @@ public class Torch : MonoBehaviour, Lightable
     public ParticleSystem[] particles;
     public Light torchLight;
     public int activeParticleSystem;
+    private Observer observer;
+
 
     public virtual void Awake()
     {
@@ -52,6 +54,13 @@ public class Torch : MonoBehaviour, Lightable
 
     public void turnOnActive()
     {
+        if (!fireStatus)
+        {
+            if (observer != null)
+            {
+                observer.update(this);
+            }
+        }
         turnOn(activeParticleSystem);
     }
 
@@ -60,6 +69,11 @@ public class Torch : MonoBehaviour, Lightable
         particles[index].Play(true);
         torchLight.gameObject.SetActive(true);
         fireStatus = true;
+    }
+
+    public void setObserver(Observer obs)
+    {
+        this.observer = obs;
     }
 
     public void turnOffActive()

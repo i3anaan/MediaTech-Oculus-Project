@@ -5,14 +5,15 @@ public class Fireball : ExpiringBullet
 {
     public void OnTriggerEnter(Collider collider)
     {
-        MonoBehaviour mb = collider.GetComponent<MonoBehaviour>();
-        if (mb is Lightable)
-        {
-            ((Lightable)mb).turnOnActive();
+        foreach(MonoBehaviour mb in collider.GetComponentsInChildren<MonoBehaviour>())
+        { 
+            if (mb is Lightable)
+            {
+                ((Lightable)mb).turnOnActive();
+            }
         }
-        else
+        foreach (MonoBehaviour mb in collider.GetComponentsInParent<MonoBehaviour>())
         {
-            mb = collider.GetComponentInParent<MonoBehaviour>();
             if (mb is Lightable)
             {
                 ((Lightable)mb).turnOnActive();
