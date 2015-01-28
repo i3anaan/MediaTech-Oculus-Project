@@ -6,6 +6,9 @@ public class FireWorkLauncher : MonoBehaviour, Lightable {
     public FireWork[] fireWorkToLaunch;
     public bool forceLaunch;
     public float launchEveryXSeconds;
+    public AudioClip launchSound;
+
+    public Transform junkContainer;
 
     void Awake()
     {
@@ -32,8 +35,8 @@ public class FireWorkLauncher : MonoBehaviour, Lightable {
     private void launchFireWork()
     {
         FireWork newFireWork = Instantiate(fireWorkToLaunch[Random.Range(0, fireWorkToLaunch.Length)], this.transform.position, this.transform.rotation) as FireWork;
-        newFireWork.transform.parent = this.transform;
-
+        newFireWork.transform.parent = junkContainer;
+        this.audio.PlayOneShot(launchSound);
 
         newFireWork.lightFuse();
     }

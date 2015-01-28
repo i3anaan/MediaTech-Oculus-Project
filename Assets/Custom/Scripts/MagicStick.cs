@@ -15,6 +15,7 @@ public class MagicStick : MonoBehaviour
     public int stabilizationPrecision = 5;
     public int maxFireBallSpeed = 1000;
     public int minFireBallSpeed = 100;
+    public int chargeSpeed = 3;
     public int maxCharge = 10;
     public float upness = 0.95F;
     public float horizontallness = 0.4F;
@@ -27,7 +28,7 @@ public class MagicStick : MonoBehaviour
 
     void Awake()
     {
-        prevAngles = new Vector3[stabilizationDuration];
+        prevAngles = new Vector3[100];
     }
 
 
@@ -53,7 +54,7 @@ public class MagicStick : MonoBehaviour
         }
         if (wandState == WandStates.Charging)
         {
-            charge = Mathf.Min(maxCharge, charge + 1);
+            charge = Mathf.Min(maxCharge, charge + chargeSpeed);
             if (Mathf.Abs(this.transform.up.y) < upness)
             {
                 wandState = WandStates.Moving;
@@ -72,11 +73,15 @@ public class MagicStick : MonoBehaviour
         }
         if (wandState == WandStates.Aiming)
         {
-            charge--;
+            if (charge > 0)
+            {
+                charge--;
+            }
             if (isStabilized(prevAngles, stabilizationPrecision))
             {
                 wandState = WandStates.Fired;
                 float speed = (((float)charge) / ((float)maxCharge)) * (maxFireBallSpeed - minFireBallSpeed) + minFireBallSpeed;
+                Debug.Log("Fireball speed: " + speed);
                 if (bulletType == BulletTypes.Fire)
                 {
                     spawnExpiringBulet(fireBallPrefab,speed);
@@ -101,7 +106,7 @@ public class MagicStick : MonoBehaviour
     private bool isStabilized(Vector3[] arr, float precision)
     {
         bool output = true;
-        for (int i = 0; i < arr.Length && output; i++)
+        for (int i = 0; i < stabilizationDuration && output; i++)
         {
             if (Mathf.Abs(arr[i].z - arr[(i + 1) % stabilizationDuration].z) > precision)
             {
