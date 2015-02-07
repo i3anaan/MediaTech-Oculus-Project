@@ -17,6 +17,7 @@ public class Torch : MonoBehaviour, Lightable
         activeParticleSystem = 0;
         particles = this.gameObject.GetComponentsInChildren<ParticleSystem>();
         turnOffAllBut(activeParticleSystem);
+        this.audio.Stop();
     }
 
     public void switchActiveParticles(int index)
@@ -69,6 +70,7 @@ public class Torch : MonoBehaviour, Lightable
         particles[index].Play(true);
         torchLight.gameObject.SetActive(true);
         fireStatus = true;
+        this.audio.Play();
     }
 
     public void setObserver(Observer obs)
@@ -86,6 +88,7 @@ public class Torch : MonoBehaviour, Lightable
         particles[index].Stop(true);
         torchLight.gameObject.SetActive(false);
         fireStatus = false;
+        this.audio.Stop();
     }
 
     public bool toggleStatus()

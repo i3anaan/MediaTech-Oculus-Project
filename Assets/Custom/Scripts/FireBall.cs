@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Fireball : ExpiringBullet
+public class FireBall : ExpiringBullet
 {
     public void OnTriggerEnter(Collider collider)
     {
